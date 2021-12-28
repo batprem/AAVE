@@ -86,10 +86,11 @@ def main():
 
     erc20_address = config["networks"][ACTICE_NETWORK]["weth_token"]
 
-    if ACTICE_NETWORK in ["mainnet-fork"]:
-        get_weth(AMOUNT, account)
+    get_weth(AMOUNT, account)
     lending_pool = get_lending_pool()
     # Approve sending out ERC20 tokens
+    print("Lending pool")
+    print(lending_pool.address)
     approve_erc20(AMOUNT, lending_pool.address, erc20_address, account)
 
     print("Depositing")
@@ -97,7 +98,11 @@ def main():
     # deposit()
     # function deposit(address asset, uint256 amount, address onBehalfOf, uint16 referralCode)
     tx = lending_pool.deposit(
-        erc20_address, AMOUNT, account.address, 0, {"from": account}
+        erc20_address,
+        AMOUNT,
+        account.address,
+        0,
+        {"from": account},
     )
     tx.wait(1)
     print("Deposited")
@@ -126,6 +131,6 @@ def main():
     print("We borrowed some DAI!")
     get_borrowable_data(lending_pool, account)
 
-    repay_all(AMOUNT, lending_pool, account)
+    repay_all((available_borrow_eth * 0.95) ** 1e18, lending_pool, account)
 
     print("You just deposited, borrowed and repayed with Aave, Brownie and Chainlink")
