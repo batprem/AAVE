@@ -13,7 +13,12 @@ from web3 import Web3
 
 
 FORKED_LOCAL_ENVIRONMENTS = ["mainnet-fork", "mainnet-fork-dev"]
-LOCAL_BLOCKCHAIN_ENVIRONMENTS = ["development", "ganache-local", "ganache-local-2"]
+LOCAL_BLOCKCHAIN_ENVIRONMENTS = [
+    "development",
+    "ganache-local",
+    "ganache-local-2",
+    "mainnet-fork",
+]
 
 
 DECIMALS = 8
@@ -26,10 +31,7 @@ def get_account(index=None, account_id=None):
         return accounts[index]
     if account_id:
         return accounts.load(account_id)
-    if (
-        active_network in LOCAL_BLOCKCHAIN_ENVIRONMENTS
-        or active_network in FORKED_LOCAL_ENVIRONMENTS
-    ):
+    if active_network in (LOCAL_BLOCKCHAIN_ENVIRONMENTS + FORKED_LOCAL_ENVIRONMENTS):
         return accounts[0]
     else:
         return accounts.add(config["wallet"]["from_key"])
